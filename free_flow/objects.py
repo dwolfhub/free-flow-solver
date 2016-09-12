@@ -19,3 +19,11 @@ class Cell(object):
         self._y = y
 
 
+class Puzzle(object):
+    def __init__(self, size, pipes):
+        """Create a puzzle
+
+        Accepts int size and list of Pipes pipes
+        """
+        self._size = size
+        self._pipes = pipes

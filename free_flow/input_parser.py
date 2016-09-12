@@ -17,7 +17,8 @@ class FileInputParser(AbstractInputParser):
 
     def parse(self):
         if not hasattr(self, '_file'):
-            return 
+            return
+        # TODO 
 
 
 class StringInputParser(AbstractInputParser):
