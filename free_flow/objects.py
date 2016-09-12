@@ -20,10 +20,11 @@ class Cell(object):
 
 
 class Puzzle(object):
-    def __init__(self, size, pipes):
+    def __init__(self, size_x, size_y, pipes):
         """Create a puzzle
 
         Accepts int size and list of Pipes pipes
         """
-        self._size = size
+        self._size_x = size_x
+        self._size_y = size_y
         self._pipes = pipes

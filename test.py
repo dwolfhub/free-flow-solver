@@ -52,7 +52,7 @@ class FileInputParserTest(unittest.TestCase):
         f = open('data/test_input_1.txt')
         fip.set_file(f)
 
-        p = objects.Puzzle(5, [
+        p = objects.Puzzle(5, 5, [
             objects.Pipe(
                 objects.Cell(1, 0),
                 objects.Cell(0, 3)
