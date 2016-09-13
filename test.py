@@ -24,58 +24,43 @@ class CellTest(unittest.TestCase):
         self.assertEqual(1, cell._x)
         self.assertEqual(2, cell._y)
 
+class PuzzleTest(unittest.TestCase):
+    def test_sizes_and_pipes_set(self):
+        puzzle = objects.Puzzle(1, 2, [4])
+
+        self.assertEqual(1, puzzle._size_x)
+        self.assertEqual(2, puzzle._size_y)
+        self.assertEqual(4, puzzle._pipes[0])
+
 
 """
 Input Parsers
 """
 
-class AbstractInputParserTest(unittest.TestCase):
-    def test_sets_pipes(self):
-        ip = input_parser.AbstractInputParser()
+class GetSizesFromFirstLineTest(unittest.TestCase):
+    def test_returns_dims(self):
+        fline = '5 5 5'
+        self.assertEqual((5, 5), input_parser.get_sizes_from_first_line(fline))
 
-        self.assertTrue(hasattr(ip, '_pipes'))
+        fline = '50 50 50'
+        self.assertEqual((50, 50), input_parser.get_sizes_from_first_line(fline))
+
+        fline = '050 30 2'
+        self.assertEqual((50, 30), input_parser.get_sizes_from_first_line(fline))
+
 
 class FileInputParserTest(unittest.TestCase):
-    def test_set_file_sets_file(self):
-        fip = input_parser.FileInputParser()
-        f = open('/dev/null')
-        fip.set_file(f)
-        
-        self.assertEqual(f, fip._file)
+    def test_parse_file_returns_none_when_no_file(self):
+        self.assertEqual(None, input_parser.parse_file(None))
 
-    def test_parse_returns_none_when_no_file(self):
-        fip = input_parser.FileInputParser()
-        self.assertEqual(None, fip.parse())
+    def test_parse_file_returns_list_of_pipes_with_start_and_stop(self):
+        puzzle = input_parser.parse_file(open('data/test_input_1.txt'))
 
-    def test_parse_returns_list_of_pipes(self):
-        fip = input_parser.FileInputParser()
-        f = open('data/test_input_1.txt')
-        fip.set_file(f)
-
-        p = objects.Puzzle(5, 5, [
-            objects.Pipe(
-                objects.Cell(1, 0),
-                objects.Cell(0, 3)
-            ),
-            objects.Pipe(
-                objects.Cell(2, 0),
-                objects.Cell(0, 4)
-            ),
-            objects.Pipe(
-                objects.Cell(3, 0),
-                objects.Cell(3, 4)
-            ),
-            objects.Pipe(
-                objects.Cell(3, 1),
-                objects.Cell(2, 2)
-            ),
-            objects.Pipe(
-                objects.Cell(2, 4),
-                objects.Cell(3, 3)
-            )
-        ])
-
-        self.assertEqual(p, fip.parse())
+        self.assertEqual(5, puzzle._size_x)
+        self.assertEqual(5, puzzle._size_y)
+        self.assertEqual(5, len(puzzle._pipes))
+        self.assertEqual(1, puzzle._pipes[0]._start._x)
+        self.assertEqual(0, puzzle._pipes[0]._start._y)
 
 
 if __name__ == '__main__':
