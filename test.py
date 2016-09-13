@@ -26,11 +26,16 @@ class CellTest(unittest.TestCase):
 
 class PuzzleTest(unittest.TestCase):
     def test_sizes_and_pipes_set(self):
-        puzzle = objects.Puzzle(1, 2, [4])
+        puzzle = objects.Puzzle(2, 2, [
+            objects.Pipe(
+                objects.Cell(0, 0),
+                objects.Cell(1, 1)
+            )
+        ])
 
-        self.assertEqual(1, puzzle._size_x)
+        self.assertEqual(2, puzzle._size_x)
         self.assertEqual(2, puzzle._size_y)
-        self.assertEqual(4, puzzle._pipes[0])
+        self.assertEqual(0, puzzle._pipes[0]._start._x)
 
 
 """
