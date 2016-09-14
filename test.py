@@ -1,4 +1,4 @@
-from free_flow import objects, input_parser
+from free_flow import objects, input_parser, solver
 import unittest
 
 """
@@ -66,6 +66,57 @@ class FileInputParserTest(unittest.TestCase):
         self.assertEqual(5, len(puzzle._pipes))
         self.assertEqual(1, puzzle._pipes[0]._start._x)
         self.assertEqual(0, puzzle._pipes[0]._start._y)
+
+"""
+Solver
+"""
+
+class GetPossibleMovesTest(unittest.TestCase):
+    def test_one_possible_move_in_the_corner(self):
+        puzzle = objects.Puzzle(3, 3, ())
+        puzzle._cells[0][1] = True
+        moves = solver.get_possible_moves(objects.Cell(0, 0), puzzle)
+
+        self.assertEqual(1, len(moves))
+        self.assertEqual(1, moves[0]._x)
+        self.assertEqual(0, moves[0]._y)
+
+    def test_two_possible_moves_in_the_corner(self):
+        puzzle = objects.Puzzle(3, 3, ())
+        moves = solver.get_possible_moves(objects.Cell(0, 0), puzzle)
+
+        self.assertEqual(2, len(moves))
+        self.assertEqual(1, moves[0]._x)
+        self.assertEqual(0, moves[0]._y)
+        self.assertEqual(0, moves[1]._x)
+        self.assertEqual(1, moves[1]._y)
+
+    def test_three_possible_moves_on_a_side(self):
+        puzzle = objects.Puzzle(3, 3, ())
+        moves = solver.get_possible_moves(objects.Cell(1, 0), puzzle)
+
+        self.assertEqual(3, len(moves))
+        self.assertEqual(2, moves[0]._x)
+        self.assertEqual(0, moves[0]._y)
+        self.assertEqual(1, moves[1]._x)
+        self.assertEqual(1, moves[1]._y)
+        self.assertEqual(0, moves[2]._x)
+        self.assertEqual(0, moves[2]._y)
+
+    def test_four_possible_moves(self):
+        puzzle = objects.Puzzle(3, 3, ())
+        moves = solver.get_possible_moves(objects.Cell(1, 1), puzzle)
+
+        self.assertEqual(4, len(moves))
+        self.assertEqual(2, moves[0]._x)
+        self.assertEqual(1, moves[0]._y)
+        self.assertEqual(1, moves[1]._x)
+        self.assertEqual(2, moves[1]._y)
+        self.assertEqual(0, moves[2]._x)
+        self.assertEqual(1, moves[2]._y)
+        self.assertEqual(1, moves[3]._x)
+        self.assertEqual(0, moves[3]._y)
+
 
 
 if __name__ == '__main__':
