@@ -8,6 +8,7 @@ class Pipe(object):
         self._start = start
         self._stop = stop
         self._steps = []
+        self._complete = False
 
 
 class Cell(object):
@@ -30,9 +31,9 @@ class Puzzle(object):
         cells = {} 
         for i in xrange(0, size_x):
             cells[i] = {} 
-            for j in xrange(0, size_y):
-                cells[i][j] = None
-        
+        for j in xrange(0, size_y):
+            cells[i][j] = None
+
         for i in pipes:
             cells[i._start._x][i._start._y] = True
             cells[i._stop._x][i._stop._y] = True

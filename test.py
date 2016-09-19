@@ -73,17 +73,25 @@ Solver
 
 class GetPossibleMovesTest(unittest.TestCase):
     def test_one_possible_move_in_the_corner(self):
-        puzzle = objects.Puzzle(3, 3, ())
+        pipe = objects.Pipe(
+            objects.Cell(0, 0),
+            objects.Cell(1, 1)
+        )
+        puzzle = objects.Puzzle(3, 3, [pipe])
         puzzle._cells[0][1] = True
-        moves = solver.get_possible_moves(objects.Cell(0, 0), puzzle)
+        moves = solver.get_possible_moves(pipe, puzzle)
 
         self.assertEqual(1, len(moves))
         self.assertEqual(1, moves[0]._x)
         self.assertEqual(0, moves[0]._y)
 
     def test_two_possible_moves_in_the_corner(self):
-        puzzle = objects.Puzzle(3, 3, ())
-        moves = solver.get_possible_moves(objects.Cell(0, 0), puzzle)
+        pipe = objects.Pipe(
+            objects.Cell(0, 0),
+            objects.Cell(1, 1)
+        )
+        puzzle = objects.Puzzle(3, 3, [pipe])
+        moves = solver.get_possible_moves(pipe, puzzle)
 
         self.assertEqual(2, len(moves))
         self.assertEqual(1, moves[0]._x)
@@ -92,8 +100,12 @@ class GetPossibleMovesTest(unittest.TestCase):
         self.assertEqual(1, moves[1]._y)
 
     def test_three_possible_moves_on_a_side(self):
-        puzzle = objects.Puzzle(3, 3, ())
-        moves = solver.get_possible_moves(objects.Cell(1, 0), puzzle)
+        pipe = objects.Pipe(
+            objects.Cell(0, 1),
+            objects.Cell(2, 2)
+        )
+        puzzle = objects.Puzzle(3, 3, [pipe])
+        moves = solver.get_possible_moves(pipe, puzzle)
 
         self.assertEqual(3, len(moves))
         self.assertEqual(2, moves[0]._x)
@@ -104,8 +116,12 @@ class GetPossibleMovesTest(unittest.TestCase):
         self.assertEqual(0, moves[2]._y)
 
     def test_four_possible_moves(self):
-        puzzle = objects.Puzzle(3, 3, ())
-        moves = solver.get_possible_moves(objects.Cell(1, 1), puzzle)
+        pipe = objects.Pipe(
+            objects.Cell(1, 1),
+            objects.Cell(3, 3)
+        )
+        puzzle = objects.Puzzle(4, 4, [pipe])
+        moves = solver.get_possible_moves(pipe, puzzle)
 
         self.assertEqual(4, len(moves))
         self.assertEqual(2, moves[0]._x)
@@ -116,6 +132,30 @@ class GetPossibleMovesTest(unittest.TestCase):
         self.assertEqual(1, moves[2]._y)
         self.assertEqual(1, moves[3]._x)
         self.assertEqual(0, moves[3]._y)
+
+
+class TestTakeOnlyAvailableStep(unittest.TestCase):
+    def test_two_steps_avaiable(self):
+        # should return the same pipe since there isn't just one optional step
+        pipe = objects.Pipe(
+            objects.Cell(0, 0),
+            objects.Cell(1, 1)
+        )
+        puzzle = objects.Puzzle(3, 3, [pipe])
+        new_pipe = solver.take_only_available_step(puzzle, pipe)
+
+        self.assertEqual(pipe, new_pipe)
+
+    def test_one_step_avaiable(self):
+        pipe = objects.Pipe(
+            objects.Cell(0, 0),
+            objects.Cell(1, 1)
+        )
+        puzzle = objects.Puzzle(3, 3, [pipe])
+        puzzle._cells[0][1] = True
+        new_pipe = solver.take_only_available_step(puzzle, pipe)
+
+        self.assertEqual(1, len(new_pipe._steps))
 
 
 
