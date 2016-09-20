@@ -2,35 +2,40 @@ from . import objects
 
 
 def get_adjacent_cells(cell):
-    # start to the right and move clockwise
+    """Given a cell, returns 4 tuples in a tuple representing 
+    the x and y values of the four adjacent cells.
+
+    May return negative indexes, which should be ignored.
+    Starts to the right and moves clock-wise
+    """
     return (
-        (cell._x + 1, cell._y), 
-        (cell._x, cell._y + 1), 
-        (cell._x - 1, cell._y),
-        (cell._x, cell._y - 1),
+        (cell.x + 1, cell.y), 
+        (cell.x, cell.y + 1), 
+        (cell.x - 1, cell.y),
+        (cell.x, cell.y - 1),
     )
 
 class PipeSolver(object):
     def __init__(self, puzzle, pipe):
-        self._puzzle = puzzle
-        self._pipe = pipe
+        self.puzzle = puzzle
+        self.pipe = pipe
 
 
     def get_current_cell(self):
         # get the current cell of the pipe
-        cell = self._pipe._start
-        if len(self._pipe._steps):
-            cell = self._pipe._steps[-1]
+        cell = self.pipe.start
+        if len(self.pipe.steps):
+            cell = self.pipe.steps[-1]
 
         return cell;
        
         
     def get_possible_next_moves(self):
         # if pipe complete, no possible moves
-        if self._pipe._complete:
+        if self.pipe.complete:
             return ()
 
-        current_cell = 
+        current_cell = self.get_current_cell()
         adj_cells = get_adjacent_cells(self.get_current_cell())
 
         # list of possible moves
@@ -39,9 +44,9 @@ class PipeSolver(object):
         # check for openings and add them to the list
         for adj_cell in adj_cells:
             try:
-                if not self._puzzle._cells[adj_cell[0]][adj_cell[1]] or (
+                if not self.puzzle.cells[adj_cell[0]][adj_cell[1]] or (
                     # remember that the end is an opening
-                    self._pipe._stop._x == adj_cell[0] and self._pipe._stop._y == adj_cell[1]
+                    self.pipe.stop.x == adj_cell[0] and self.pipe.stop.y == adj_cell[1]
                 ):
                     moves.append(objects.Cell(adj_cell[0], adj_cell[1]))
             except KeyError:
@@ -49,27 +54,26 @@ class PipeSolver(object):
             
         return moves
 
-
-    def take_only_available_step(puzzle, pipe):
-        poss_moves = get_possible_moves(pipe, puzzle)
+    def take_only_available_steps(self):
+        poss_moves = self.get_possible_next_moves()
 
         if len(poss_moves) == 1:
-            pipe._steps.append(poss_moves[0])
+            # is our own possible move to complete the pipe?
+            if poss_moves[0].x == self.pipe.stop.x and poss_moves[0].x == self.pipe.stop.x:
+                self.pipe.complete = True
+                return
+            self.pipe.steps.append(poss_moves[0])
+            self.take_only_available_steps()
 
-            return take_only_available_step(puzzle, pipe)
-        else:
-            return pipe 
 
+def take_only_available_steps(puzzle):
+    pipes = []
+    for pipe in puzzle.pipes:
+        pipes.append(take_only_available_step(puzzle, pipe))
+    
+    puzzle.pipes = pipes
 
-    def take_only_available_steps(puzzle):
-        # TODO do this from end to start as well 
-        pipes = []
-        for pipe in puzzle._pipes:
-            pipes.append(take_only_available_step(puzzle, pipe))
-        
-        puzzle._pipes = pipes
-
-        return puzzle
+    return puzzle
 
 
 def solve(puzzle):

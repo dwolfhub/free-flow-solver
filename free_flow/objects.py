@@ -5,10 +5,10 @@ class Pipe(object):
 
         Accepts Cells start and stop
         """
-        self._start = start
-        self._stop = stop
-        self._steps = []
-        self._complete = False
+        self.start = start
+        self.stop = stop
+        self.steps = []
+        self.complete = False
 
 
 class Cell(object):
@@ -17,28 +17,28 @@ class Cell(object):
 
         Accepts integers x and y
         """
-        self._x = x
-        self._y = y
+        self.x = x
+        self.y = y
 
 
 class Puzzle(object):
-    def __init__(self, size_x, size_y, pipes):
+    def __init__(self, sizex, sizey, pipes):
         """Create a puzzle
 
         Accepts int size and list of Pipes pipes
-        Creates map (self._cells) of the puzzle in its current state for reference
+        Creates map (self.cells) of the puzzle in its current state for reference
         """
         cells = {} 
-        for i in xrange(0, size_x):
+        for i in xrange(0, sizex):
             cells[i] = {} 
-        for j in xrange(0, size_y):
-            cells[i][j] = None
+            for j in xrange(0, sizey):
+                cells[i][j] = None
 
         for i in pipes:
-            cells[i._start._x][i._start._y] = True
-            cells[i._stop._x][i._stop._y] = True
+            cells[i.start.x][i.start.y] = True
+            cells[i.stop.x][i.stop.y] = True
         
-        self._cells = cells
-        self._size_x = size_x
-        self._size_y = size_y
-        self._pipes = pipes
+        self.cells = cells
+        self.size_x = sizex
+        self.size_y = sizey
+        self.pipes = pipes
