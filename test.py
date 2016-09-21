@@ -181,13 +181,32 @@ class GetPossibleMovesTest(unittest.TestCase):
         self.assertEqual(1, moves[3].x)
         self.assertEqual(0, moves[3].y)
 
+    def test_four_possible_moves_including_stop(self):
+        pipe = objects.Pipe(
+            objects.Cell(1, 1),
+            objects.Cell(1, 0)
+        )
+        puzzle = objects.Puzzle(4, 4, [pipe])
+        ps = solver.PipeSolver(puzzle, pipe)
+        moves = ps.get_possible_next_moves()
+
+        self.assertEqual(4, len(moves))
+        self.assertEqual(2, moves[0].x)
+        self.assertEqual(1, moves[0].y)
+        self.assertEqual(1, moves[1].x)
+        self.assertEqual(2, moves[1].y)
+        self.assertEqual(0, moves[2].x)
+        self.assertEqual(1, moves[2].y)
+        self.assertEqual(1, moves[3].x)
+        self.assertEqual(0, moves[3].y)
+
 
 class TestTakeOnlyAvailableStep(unittest.TestCase):
     def test_two_steps_available(self):
         # should return the same pipe since there isn't just one optional step
         pipe = objects.Pipe(
             objects.Cell(0, 0),
-            objects.Cell(1, 1)
+            objects.Cell(2, 2)
         )
         puzzle = objects.Puzzle(3, 3, [pipe])
         ps = solver.PipeSolver(puzzle, pipe)
@@ -195,10 +214,10 @@ class TestTakeOnlyAvailableStep(unittest.TestCase):
 
         self.assertEqual(pipe, ps.pipe)
 
-    def test_one_step_avaiable(self):
+    def test_one_step_available(self):
         pipe = objects.Pipe(
             objects.Cell(0, 0),
-            objects.Cell(1, 1)
+            objects.Cell(2, 2)
         )
         puzzle = objects.Puzzle(3, 3, [pipe])
         puzzle.cells[0][1] = True
@@ -207,6 +226,32 @@ class TestTakeOnlyAvailableStep(unittest.TestCase):
 
         self.assertEqual(1, len(ps.pipe.steps))
 
+    def test_one_step_available_twice(self):
+        pipe = objects.Pipe(
+            objects.Cell(0, 0),
+            objects.Cell(2, 2)
+        )
+        puzzle = objects.Puzzle(3, 3, [pipe])
+        puzzle.cells[0][1] = True
+        puzzle.cells[1][1] = True
+        ps = solver.PipeSolver(puzzle, pipe)
+        ps.take_only_available_steps()
+
+        self.assertEqual(2, len(ps.pipe.steps))
+
+    def test_complete_the_pipe(self):
+        pipe = objects.Pipe(
+            objects.Cell(0, 0),
+            objects.Cell(1, 1)
+        )
+        puzzle = objects.Puzzle(3, 3, [pipe])
+        puzzle.cells[0][1] = True
+        puzzle.cells[2][0] = True
+        ps = solver.PipeSolver(puzzle, pipe)
+        ps.take_only_available_steps()
+
+        self.assertEqual(1, len(ps.pipe.steps))
+        self.assertEqual(True, ps.pipe.complete)
 
 
 if __name__ == '__main__':

@@ -58,11 +58,13 @@ class PipeSolver(object):
         poss_moves = self.get_possible_next_moves()
 
         if len(poss_moves) == 1:
+            move = poss_moves[0]
             # is our own possible move to complete the pipe?
-            if poss_moves[0].x == self.pipe.stop.x and poss_moves[0].x == self.pipe.stop.x:
+            if move.x == self.pipe.stop.x and move.y == self.pipe.stop.y:
                 self.pipe.complete = True
                 return
-            self.pipe.steps.append(poss_moves[0])
+
+            self.pipe.steps.append(move)
             self.take_only_available_steps()
 
 
