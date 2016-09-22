@@ -253,6 +253,25 @@ class TestTakeOnlyAvailableStep(unittest.TestCase):
         self.assertEqual(1, len(ps.pipe.steps))
         self.assertEqual(True, ps.pipe.complete)
 
+class TestPuzzleSolver(unittest.TestCase):
+    def test_stores_puzzle_and_pipe_solvers(self):
+        pipes = (
+            objects.Pipe(
+                objects.Cell(0, 0),
+                objects.Cell(1, 1)
+            ),
+            objects.Pipe(
+                objects.Cell(2, 2),
+                objects.Cell(1, 2)
+            )
+        )
+        puzzle = objects.Puzzle(3, 3, pipes)
+        ps = solver.PuzzleSolver(puzzle)
+
+        self.assertEqual(2, len(ps.pipe_solvers))
+        self.assertEqual(True, isinstance(ps.pipe_solvers[0], solver.PipeSolver))
+        self.assertEqual(True, isinstance(ps.pipe_solvers[1], solver.PipeSolver))
+
 
 if __name__ == '__main__':
     unittest.main()

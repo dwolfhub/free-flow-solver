@@ -16,6 +16,9 @@ def get_adjacent_cells(cell):
     )
 
 class PipeSolver(object):
+    """Given a puzzle and a particular pipe, this class provides
+    methods to find the proper path for the pipe.
+    """
     def __init__(self, puzzle, pipe):
         self.puzzle = puzzle
         self.pipe = pipe
@@ -67,13 +70,14 @@ class PipeSolver(object):
             self.pipe.steps.append(move)
             self.take_only_available_steps()
 
+class PuzzleSolver(object):
+    def __init__(self, puzzle):
+        self.puzzle = puzzle
+        self.pipe_solvers = [PipeSolver(puzzle, pipe) for pipe in puzzle.pipes]
 
+        
 def take_only_available_steps(puzzle):
-    pipes = []
-    for pipe in puzzle.pipes:
-        pipes.append(take_only_available_step(puzzle, pipe))
-    
-    puzzle.pipes = pipes
+    puzzle.pipes = [take_only_available_step(puzzle, pipe) for pipe in puzzle.pipes]
 
     return puzzle
 
