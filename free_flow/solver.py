@@ -70,19 +70,26 @@ class PipeSolver(object):
             self.pipe.steps.append(move)
             self.take_only_available_steps()
 
+
 class PuzzleSolver(object):
     def __init__(self, puzzle):
         self.puzzle = puzzle
         self.pipe_solvers = [PipeSolver(puzzle, pipe) for pipe in puzzle.pipes]
+        self.complete = False
 
-        
-def take_only_available_steps(puzzle):
-    puzzle.pipes = [take_only_available_step(puzzle, pipe) for pipe in puzzle.pipes]
+    def take_only_available_steps(self):
+        all_pipes_done = True
+        for pipe_solver in self.pipe_solvers:
+            pipe_solver.take_only_available_steps() 
+            
+            if pipe_solver.pipe.complete is not True:
+                all_pipes_done = False
 
-    return puzzle
+        self.complete = all_pipes_done
 
 
-def solve(puzzle):
-    puzzle = take_only_available_steps(puzzle)
+def solve_puzzle(puzzle):
+    puzzle_solver = PuzzleSolver(puzzle)
+    puzzle_solver.take_only_available_steps()
 
 

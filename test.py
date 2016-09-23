@@ -254,7 +254,7 @@ class TestTakeOnlyAvailableStep(unittest.TestCase):
         self.assertEqual(True, ps.pipe.complete)
 
 class TestPuzzleSolver(unittest.TestCase):
-    def test_stores_puzzle_and_pipe_solvers(self):
+    def test_stores_puzzle_pipe_solvers_and_complete_flag(self):
         pipes = (
             objects.Pipe(
                 objects.Cell(0, 0),
@@ -271,6 +271,39 @@ class TestPuzzleSolver(unittest.TestCase):
         self.assertEqual(2, len(ps.pipe_solvers))
         self.assertEqual(True, isinstance(ps.pipe_solvers[0], solver.PipeSolver))
         self.assertEqual(True, isinstance(ps.pipe_solvers[1], solver.PipeSolver))
+        self.assertFalse(ps.complete)
+
+    def test_take_only_available_steps(self):
+        pipes = (
+            objects.Pipe(
+                objects.Cell(0, 0),
+                objects.Cell(1, 1)
+            ),
+        )
+        puzzle = objects.Puzzle(3, 3, pipes)
+        puzzle.cells[0][1] = True
+        puzzle.cells[2][0] = True
+        ps = solver.PuzzleSolver(puzzle)
+        ps.take_only_available_steps()
+
+        self.assertEqual(True, ps.pipe_solvers[0].pipe.complete)
+
+    def test_take_only_available_steps_will_solve_puzzle(self):
+        pipes = (
+            objects.Pipe(
+                objects.Cell(1, 0),
+                objects.Cell(0, 1),
+            ),
+            objects.Pipe(
+                objects.Cell(1, 1),
+                objects.Cell(2, 0)
+            ),
+        )
+        puzzle = objects.Puzzle(3, 2, pipes)
+        ps = solver.PuzzleSolver(puzzle)
+        ps.take_only_available_steps()
+
+        self.assertTrue(ps.complete)
 
 
 if __name__ == '__main__':
