@@ -32,15 +32,7 @@ class PipeSolver(object):
 
         return cell;
        
-        
-    def get_possible_next_moves(self):
-        # if pipe complete, no possible moves
-        if self.pipe.complete:
-            return ()
-
-        current_cell = self.get_current_cell()
-        adj_cells = get_adjacent_cells(self.get_current_cell())
-
+    def get_possible_moves_from_adj_cells(self, adj_cells):
         # list of possible moves
         moves = []
         
@@ -56,6 +48,18 @@ class PipeSolver(object):
                 pass
             
         return moves
+        
+        
+    def get_possible_next_moves(self):
+        # if pipe complete, no possible moves
+        if self.pipe.complete:
+            return ()
+
+        current_cell = self.get_current_cell()
+        adj_cells = get_adjacent_cells(self.get_current_cell())
+        
+        return self.get_possible_moves_from_adj_cells(adj_cells)
+
 
     def take_only_available_steps(self):
         poss_moves = self.get_possible_next_moves()
